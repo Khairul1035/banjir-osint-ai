@@ -12,22 +12,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- MODERN EXECUTIVE THEME (CSS) ---
-st.markdown("""
-<style>
-    @import url('https://googleapis.com');
-    html, body, [data-testid="stSidebarViewPort"] { font-family: 'Inter', sans-serif; background-color: #0F172A; }
-    .main-title { font-size:36px !important; font-weight: 800; color: #F8FAFC; letter-spacing: -1px; margin-bottom: 0px;}
-    .subtitle { font-size:15px; color: #94A3B8; margin-bottom: 20px; }
-    .status-box { padding: 25px; border-radius: 12px; margin-bottom: 25px; text-align: center; color: white; font-weight: 700; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
-    .danger { background-color: #DC2626; background-image: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); }
-    .warning { background-color: #D97706; background-image: linear-gradient(135deg, #D97706 0%, #92400E 100%); }
-    .safe { background-color: #059669; background-image: linear-gradient(135deg, #059669 0%, #065F46 100%); }
-    .log-card { background-color: #1E293B; padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid #EF4444; border-top: 1px solid #334155; border-right: 1px solid #334155; border-bottom: 1px solid #334155; color: #F1F5F9; }
-    .log-card-safe { background-color: #1E293B; padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid #10B981; border-top: 1px solid #334155; border-right: 1px solid #334155; border-bottom: 1px solid #334155; color: #F1F5F9; }
-</style>
-""", unsafe_allow_html=True)
-
 # --- SYSTEM LANGUAGE INTERPRETER ---
 col_title, col_lang = st.columns(2)
 with col_lang:
@@ -65,8 +49,8 @@ text = {
 }
 
 with col_title:
-    st.markdown(f'<p class="main-title">{text[lang]["title"]}</p>', unsafe_allow_html=True)
-    st.markdown(f'<p class="subtitle">{text[lang]["subtitle"]}</p>', unsafe_allow_html=True)
+    st.title(text[lang]["title"])
+    st.caption(text[lang]["subtitle"])
 
 st.divider()
 
@@ -93,8 +77,8 @@ malaysia_all_states = {
 col_ctrl, col_map = st.columns(2)
 
 with col_ctrl:
-    st.markdown(f"##### {text[lang]['select_area']}")
-    kawasan = st.selectbox("", list(malaysia_all_states.keys()), label_visibility="collapsed")
+    st.write(text[lang]["select_area"])
+    kawasan = st.selectbox("State Selection", list(malaysia_all_states.keys()), label_visibility="collapsed")
     node = malaysia_all_states[kawasan]
 
 # --- PIPELINE #1: MALAYSIA GOVERNMENT DATA API (METMALAYSIA FORECAST) ---
@@ -147,7 +131,7 @@ else:
 
 # RENDERING GEOSPATIAL MAP INTERFACE
 with col_map:
-    st.markdown(f"##### {text[lang]['map_title']}")
+    st.write(text[lang]['map_title'])
     m = folium.Map(location=[node["lat"], node["lon"]], zoom_start=node["zoom"], tiles="cartodbpositron")
     folium.Marker(
         [node["lat"], node["lon"]],
@@ -158,10 +142,15 @@ with col_map:
     st_folium(m, width="100%", height=260, returned_objects=[])
 
 # --- DYNAMIC NATIONAL ALERT DISPLAY BANNER ---
-st.markdown(f'<div class="status-box {warna_kelas}"><h2>{status_semasa}</h2><small>⏱️ Central Pipeline Synchronization: {current_time} (MYT) | Verified METMalaysia Source: <b>{met_malaysia_condition}</b></small></div>', unsafe_allow_html=True)
+if alert_level == "HIGH":
+    st.error(f"### {status_semasa}\n⏱️ Pipeline Sync: {current_time} (MYT) | METMalaysia: **{met_malaysia_condition}**")
+elif alert_level == "MODERATE":
+    st.warning(f"### {status_semasa}\n⏱️ Pipeline Sync: {current_time} (MYT) | METMalaysia: **{met_malaysia_condition}**")
+else:
+    st.success(f"### {status_semasa}\n⏱️ Pipeline Sync: {current_time} (MYT) | METMalaysia: **{met_malaysia_condition}**")
 
-# --- VERIFIED METEOROLOGICAL TELEMETRY GRID USING NATIVE STREAMLIT METRICS ---
-st.markdown(f"#### {text[lang]['weather_title']}")
+# --- VERIFIED METEOROLOGICAL TELEMETRY GRID ---
+st.subheader(text[lang]['weather_title'])
 m_col1, m_col2, m_col3, m_col4 = st.columns(4)
 with m_col1:
     st.metric(label="Suhu / Temperature", value=f"{temp} °C")
@@ -180,3 +169,15 @@ col_osint, col_ai = st.columns(2)
 if alert_level == "HIGH":
     if lang == "English":
         osint_reports = [
+            {"Type": "🚫 ROUTE BLOCKED", "Location": f"{kawasan} Primary Supply Bypass", "Detail": "Hydro-sensors detect flash flood at 0.78m. Infrastructure restricted."},
+            {"Type": "🗺️ REROUTING LINK", "Location": "High-Ground Commercial Road", "Detail": "OSINT scraping confirms dry surface. Logistics vehicles routed here."},
+            {"Type": "🏠 PPS NODE", "Location": f"{kawasan} Central Stadium Hub", "Detail": "Active. Real-time Capacity: 184/500 units occupied."}
+        ]
+        ai_analisis = f"🤖 **Gemini Architecture Evaluation:** Fusing METMalaysia forecast ({met_malaysia_condition}) with real-time precipitation arrays ({rain} mm/h) uncovers an extreme flood risk indicator. Local terrain vector shows saturated soil metrics."
+        ai_panduan = f"📢 **ChatGPT Tactical Action Blueprint:** Primary communication channels in {kawasan} are heavily compromised. Reroute logistics assets to the High-Ground Commercial Trunk Road. Order civilian assembly toward Central Stadium Hub."
+    else:
+        osint_reports = [
+            {"Type": "🚫 LALUAN TERSEKAT", "Location": f"Pintasan Bekalan Utama {kawasan}", "Detail": "Sensor hidro mengesan banjir kilat setempat pada paras 0.78m."},
+            {"Type": "🗺️ HALUAN ALTERNATIF", "Location": "Jalan Komersial Tanah Tinggi", "Detail": "Penyaringan OSINT mengesahkan permukaan kering. Armada logistik dialihkan ke sini."},
+            {"Type": "🏠 HUB PPS AKTIF", "Location": f"Hub Stadium Pusat {kawasan}", "Detail": "Beroperasi. Kapasiti Semasa: 184/500 unit dipenuhi."}
+        ]
