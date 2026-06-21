@@ -23,8 +23,6 @@ st.markdown("""
     .danger { background-color: #DC2626; background-image: linear-gradient(135deg, #DC2626 0%, #991B1B 100%); }
     .warning { background-color: #D97706; background-image: linear-gradient(135deg, #D97706 0%, #92400E 100%); }
     .safe { background-color: #059669; background-image: linear-gradient(135deg, #059669 0%, #065F46 100%); }
-    .metric-grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px; }
-    .metric-card-pro { background-color: #1E293B; padding: 22px; border-radius: 12px; text-align: center; color: #F1F5F9; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
     .log-card { background-color: #1E293B; padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid #EF4444; border-top: 1px solid #334155; border-right: 1px solid #334155; border-bottom: 1px solid #334155; color: #F1F5F9; }
     .log-card-safe { background-color: #1E293B; padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 6px solid #10B981; border-top: 1px solid #334155; border-right: 1px solid #334155; border-bottom: 1px solid #334155; color: #F1F5F9; }
 </style>
@@ -162,8 +160,23 @@ with col_map:
 # --- DYNAMIC NATIONAL ALERT DISPLAY BANNER ---
 st.markdown(f'<div class="status-box {warna_kelas}"><h2>{status_semasa}</h2><small>⏱️ Central Pipeline Synchronization: {current_time} (MYT) | Verified METMalaysia Source: <b>{met_malaysia_condition}</b></small></div>', unsafe_allow_html=True)
 
-# --- VERIFIED METEOROLOGICAL TELEMETRY GRID USING CSS FLEX/GRID ---
+# --- VERIFIED METEOROLOGICAL TELEMETRY GRID USING NATIVE STREAMLIT METRICS ---
 st.markdown(f"#### {text[lang]['weather_title']}")
-st.markdown(f"""
-<div class="metric-grid-container">
-    <div class="metric-card-pro"><span style="font-size:22px;">🌡️</span><br><small style="color:#94A3B8;">Suhu / Temperature</small><br><h2 style="color:#F8FAFC; margin-top:5px; margin-bottom:0px;">{temp}°C</h2></div>
+m_col1, m_col2, m_col3, m_col4 = st.columns(4)
+with m_col1:
+    st.metric(label="Suhu / Temperature", value=f"{temp} °C")
+with m_col2:
+    st.metric(label="Kelembapan / Humidity", value=f"{humidity} %")
+with m_col3:
+    st.metric(label="Kadar Hujan / Precipitation", value=f"{rain} mm/h")
+with m_col4:
+    st.metric(label="Kelajuan Angin / Wind Speed", value=f"{wind} km/h")
+
+st.write("")
+
+# --- COGNITIVE REASONING COMPONENT ---
+col_osint, col_ai = st.columns(2)
+
+if alert_level == "HIGH":
+    if lang == "English":
+        osint_reports = [
