@@ -24,7 +24,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- REAL-TIME LANGUAGE SWITCHER (DIBAIKI UNTUK PYTHON KINI) ---
+# --- REAL-TIME LANGUAGE SWITCHER ---
 col_title, col_lang = st.columns(2)
 with col_lang:
     lang = st.radio("🌐 Language / Bahasa", ["English", "Bahasa Melayu"], horizontal=True)
@@ -41,7 +41,7 @@ text = {
         "osint_title": "📡 Live Crowd-Sourced Intel & OSINT Routing",
         "osint_desc": "Real-time verification of closed roads, blockages, and alternative pathways.",
         "ai_title": "🤖 AI Decision Engine (ChatGPT & Gemini Integration)",
-        "weather_title": "📊 Live Meteorological Sensor Data (Satelit Real-Time)",
+        "weather_title": "📊 Live Meteorological Sensor Data (Satellite Real-Time)",
         "footer": "System Live. Powered by Open-Meteo Satellite API, ChatGPT Knowledge Engine, and Streamlit Cloud Framework."
     },
     "Bahasa Melayu": {
@@ -133,8 +133,6 @@ with m_col4:
 
 st.write("")
 
-col1, col2 = st.columns(2)
-
 if alert_level == "HIGH":
     if lang == "English":
         osint_reports = [
@@ -168,4 +166,7 @@ else:
         ai_analisis = "🤖 **Analisis AI (Gemini Cloud):** Titik data daripada satelit menunjukkan indeks risiko pada tahap minimum. Parameter saliran tempatan beroperasi secara optimum."
         ai_panduan = "📢 **Pelan Tindakan Logistik (ChatGPT):** Prosedur operasi normal dikekalkan. Tiada perubahan laluan diperlukan. Sentiasa pantau perkembangan cuaca semasa."
 
+col1, col2 = st.columns(2)
+
 with col1:
+    st.markdown(f"### {text[lang]['osint_title']}")
