@@ -24,12 +24,12 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- REAL-TIME LANGUAGE SWITCHER ---
-col_title, col_lang = st.columns()
+# --- REAL-TIME LANGUAGE SWITCHER (DIBAIKI UNTUK PYTHON KINI) ---
+col_title, col_lang = st.columns(2)
 with col_lang:
     lang = st.radio("🌐 Language / Bahasa", ["English", "Bahasa Melayu"], horizontal=True)
 
-# --- DICTIONARY FOR MULTI-LANGUAGE TRASNLATION ---
+# --- DICTIONARY FOR MULTI-LANGUAGE TRANSLATION ---
 text = {
     "English": {
         "title": "🚨 MY-FLOODGUARD: OSINT & AI DISASTER NETWORK",
@@ -169,4 +169,3 @@ else:
         ai_panduan = "📢 **Pelan Tindakan Logistik (ChatGPT):** Prosedur operasi normal dikekalkan. Tiada perubahan laluan diperlukan. Sentiasa pantau perkembangan cuaca semasa."
 
 with col1:
-    st.markdown(f"### {text[lang]['osint_title']}")
