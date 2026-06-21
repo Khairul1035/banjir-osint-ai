@@ -29,7 +29,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- SYSTEM LANGUAGE INTERPRETER Matrix ---
+# --- SYSTEM LANGUAGE INTERPRETER ---
 col_title, col_lang = st.columns(2)
 with col_lang:
     lang = st.radio("🌐 Matrix Bahasa / Language", ["English", "Bahasa Melayu"], horizontal=True)
@@ -46,7 +46,7 @@ text = {
         "osint_title": "📡 Tactical OSINT Logs & Alternative Navigation",
         "osint_desc": "Real-time crowdsourced feeds identifying logistics blockages, road closures, and shelter availability.",
         "ai_title": "🤖 Generative AI Cognitive Orchestration (ChatGPT & Gemini Engine)",
-        "weather_title": "📊 Unified Meteorological Array (METMalaysia Live API + Open-Meteo Cluster)",
+        "weather_title": "📊 Verified Meteorological Pipeline (METMalaysia Live API + Open-Meteo Cluster)",
         "footer": "Production Cloud Active. Live API query to data.gov.my, Open-Meteo Satellite Node, and OpenAI Analytical Core."
     },
     "Bahasa Melayu": {
@@ -98,15 +98,14 @@ with col_ctrl:
     kawasan = st.selectbox("", list(malaysia_all_states.keys()), label_visibility="collapsed")
     node = malaysia_all_states[kawasan]
 
-# --- PIPELINE #1: MALAYSIA GOVERNMENT DATA API (METMALAYSIA REAL-TIME FORECAST) ---
+# --- PIPELINE #1: MALAYSIA GOVERNMENT DATA API (METMALAYSIA FORECAST) ---
 @st.cache_data(ttl=300)
 def get_official_metmalaysia_forecast(state_code):
-    url = "https://api.data.gov.my/weather/forecast"
+    url = "https://data.gov.my"
     try:
         response = requests.get(url).json()
         for item in response:
             if item.get("state") == state_code:
-                # Mengambil ramalan cuaca am sebagai rujukan sah
                 return item.get("morning_forecast", "Clear/Tiada Hujan")
         return "Clear"
     except:
@@ -147,7 +146,7 @@ else:
     warna_kelas, alert_level = "safe", "LOW"
     status_semasa = text[lang]["safe_status"]
 
-# RENDERING HIGH-LEVEL GEOSPATIAL MAP INTERFACE
+# RENDERING GEOSPATIAL MAP INTERFACE
 with col_map:
     st.markdown(f"##### {text[lang]['map_title']}")
     m = folium.Map(location=[node["lat"], node["lon"]], zoom_start=node["zoom"], tiles="cartodbpositron")
@@ -168,3 +167,5 @@ m_col1, m_col2, m_col3, m_col4 = st.columns(4)
 with m_col1:
     st.markdown(f'<div class="metric-card"><span style="font-size:22px;">🌡️</span><br><small style="color:#94A3B8;">Suhu / Temperature</small><br><h2 style="color:#F8FAFC; margin-top:5px;">{temp}°C</h2></div>', unsafe_allow_html=True)
 with m_col2:
+    st.markdown(f'<div class="metric-card"><span style="font-size:22px;">💧</span><br><small style="color:#94A3B8;">Kelembapan / Humidity</small><br><h2 style="color:#F8FAFC; margin-top:5px;">{humidity}%</h2></div>', unsafe_allow_html=True)
+with m_col3:
